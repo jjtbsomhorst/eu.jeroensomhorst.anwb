@@ -10,8 +10,8 @@
         "en": "Ask homey for current Traffic information regarding your favorite highways or all traffic in the Netherlands"
     },
     "images":{
-        "large":"./assets/images/large.jpeg",
-        "small":"./assets/images/small.jpeg"
+        "large":"./assets/images/large.jpg",
+        "small":"./assets/images/small.jpg"
     },
     "version": "0.1.0",
     "compatibility": "0.x || 1.x",
