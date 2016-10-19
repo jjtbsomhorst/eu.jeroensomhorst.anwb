@@ -1,0 +1,337 @@
+{
+    "id": "eu.jeroensomhorst.anwb",
+    "name": {
+        "nl": "ANWB File informatie",
+        "en": "ANWB Traffic information"
+    },
+    
+    "description": {
+        "nl": "Vraag aan homey de actuele file informatie van jou favoriete wegen of van heel Nederland",
+        "en": "Ask homey for current Traffic information regarding your favorite highways or all traffic in the Netherlands"
+    },
+    "images":{
+        "large":"./assets/images/large.jpeg",
+        "small":"./assets/images/small.jpeg"
+    },
+    "version": "0.0.1",
+    "compatibility": "0.x || 1.x",
+    "author": {
+            "name": "Jeroen Somhorst",
+            "email": "j.somhorst@gmail.com"
+    },
+    "category": ["internet"], 
+    "dependencies":{
+        "request":"*"
+    },
+    "flow":{
+        "triggers":[],
+        "conditions":[],
+        "actions":[
+            {
+                "id": "anwb_tell_various",
+                "title":{
+                    "en": "Traffic information",
+                    "nl": "Verkeersinformatie"
+                },
+                "args": [{
+                    "name": "eventType",
+                    "type": "dropdown",
+                    "values":[
+                        {
+                        "id": "trafficjam",
+                        "label": {"en":"Traffic jams","nl":"File informatie"}
+                        },
+                        {
+                        "id": "roadwork",
+                        "label": {"en":"Roadworks","nl":"Wegwerkzaamheden"}
+                        },
+                         {
+                        "id": "radar",
+                        "label": {"en":"Police checks","nl":"Radar controles"}
+                        }
+                    ]
+                },
+                        {
+                        "name": "road",
+                        "type": "dropdown",
+                        "values": [
+                        {
+                            "id": "",
+                            "label": {"en":"","nl":""}
+                        },
+                        {
+                        "id": "A1",
+                        "label": {"en":"A1"}
+                        },
+                        {
+                        "id": "A2",
+                        "label": {"en":"A2"}
+                        },
+                        {
+                        "id": "A4",
+                        "label": {"en":"A4"}
+                        },
+                        {
+                        "id": "A5",
+                        "label": {"en":"A5"}
+                        },{
+                        "id": "A6",
+                        "label": {"en":"A6"}
+                        },{
+                        "id": "A7",
+                        "label": {"en":"A7"}
+                        },{
+                        "id": "A8",
+                        "label": {"en":"A8"}
+                        },{
+                        "id": "A9",
+                        "label": {"en":"A9"}
+                        },{
+                        "id": "A10",
+                        "label": {"en":"A10"}
+                        },{
+                        "id": "A12",
+                        "label": {"en":"A12"}
+                        },{
+                        "id": "A13",
+                        "label": {"en":"A13"}
+                        },{
+                        "id": "A15",
+                        "label": {"en":"A15"}
+                        },{
+                        "id": "A16",
+                        "label": {"en":"A16"}
+                        },{
+                        "id": "A17",
+                        "label": {"en":"A17"}
+                        },{
+                        "id": "A18",
+                        "label": {"en":"A18"}
+                        },{
+                        "id": "A20",
+                        "label": {"en":"A20"}
+                        },
+                        {
+                        "id": "A22",
+                        "label": {"en":"A22"}
+                        },{
+                        "id": "A27",
+                        "label": {"en":"A27"}
+                        },{
+                        "id": "A28",
+                        "label": {"en":"A28"}
+                        },{
+                        "id": "A29",
+                        "label": {"en":"A29"}
+                        },{
+                        "id": "A30",
+                        "label": {"en":"A30"}
+                        },{
+                        "id": "A31",
+                        "label": {"en":"A30 (N31)"}
+                        },{
+                        "id": "A32",
+                        "label": {"en":"A32"}
+                        },{
+                        "id": "A35",
+                        "label": {"en":"A35 (N35)"}
+                        },{
+                        "id": "A37",
+                        "label": {"en":"A37"}
+                        },{
+                        "id": "A38",
+                        "label": {"en":"A38"}
+                        },{
+                        "id": "A44",
+                        "label": {"en":"A44 (N44)"}
+                        },{
+                        "id": "A50",
+                        "label": {"en":"A50"}
+                        },{
+                        "id": "A58",
+                        "label": {"en":"A58 (N58)"}
+                        },{
+                        "id": "A59",
+                        "label": {"en":"A59 (N59)"}
+                        },{
+                        "id": "A65",
+                        "label": {"en":"A65 (N65)"}
+                        },{
+                        "id": "A67",
+                        "label": {"en":"A67"}
+                        },{
+                        "id": "A73",
+                        "label": {"en":"A73"}
+                        },{
+                        "id": "A76",
+                        "label": {"en":"A76"}
+                        },{
+                        "id": "A77",
+                        "label": {"en":"A77"}
+                        },{
+                        "id": "A79",
+                        "label": {"en":"A79"}
+                        },{
+                        "id": "A200",
+                        "label": {"en":"A200 (N200)"}
+                        }
+                    ]
+                    }
+                   
+            ]
+            },
+           {
+                "id": "anwb_tell_trafic_all",
+                "title":{
+                "en": "Trafficjam information",
+                "nl": "File informatie"
+                }
+            },
+            {
+            "id":"anwb_tell_traffic_single",
+            "title":{
+                "en": "Single Traffic information",
+                "nl": "Enkele File informatie"
+            },
+            "args": [
+                        {
+                        "name": "road",
+                        "type": "dropdown",
+                        "values": [
+                        {
+                        "id": "A1",
+                        "label": {"en":"A1"}
+                        },
+                        {
+                        "id": "A2",
+                        "label": {"en":"A2"}
+                        },
+                        {
+                        "id": "A4",
+                        "label": {"en":"A4"}
+                        },
+                        {
+                        "id": "A5",
+                        "label": {"en":"A5"}
+                        },{
+                        "id": "A6",
+                        "label": {"en":"A6"}
+                        },{
+                        "id": "A7",
+                        "label": {"en":"A7"}
+                        },{
+                        "id": "A8",
+                        "label": {"en":"A8"}
+                        },{
+                        "id": "A9",
+                        "label": {"en":"A9"}
+                        },{
+                        "id": "A10",
+                        "label": {"en":"A10"}
+                        },{
+                        "id": "A12",
+                        "label": {"en":"A12"}
+                        },{
+                        "id": "A13",
+                        "label": {"en":"A13"}
+                        },{
+                        "id": "A15",
+                        "label": {"en":"A15"}
+                        },{
+                        "id": "A16",
+                        "label": {"en":"A16"}
+                        },{
+                        "id": "A17",
+                        "label": {"en":"A17"}
+                        },{
+                        "id": "A18",
+                        "label": {"en":"A18"}
+                        },{
+                        "id": "A20",
+                        "label": {"en":"A20"}
+                        },
+                        {
+                        "id": "A22",
+                        "label": {"en":"A22"}
+                        },{
+                        "id": "A27",
+                        "label": {"en":"A27"}
+                        },{
+                        "id": "A28",
+                        "label": {"en":"A28"}
+                        },{
+                        "id": "A29",
+                        "label": {"en":"A29"}
+                        },{
+                        "id": "A30",
+                        "label": {"en":"A30"}
+                        },{
+                        "id": "A31",
+                        "label": {"en":"A30 (N31)"}
+                        },{
+                        "id": "A32",
+                        "label": {"en":"A32"}
+                        },{
+                        "id": "A35",
+                        "label": {"en":"A35 (N35)"}
+                        },{
+                        "id": "A37",
+                        "label": {"en":"A37"}
+                        },{
+                        "id": "A38",
+                        "label": {"en":"A38"}
+                        },{
+                        "id": "A44",
+                        "label": {"en":"A44 (N44)"}
+                        },{
+                        "id": "A50",
+                        "label": {"en":"A50"}
+                        },{
+                        "id": "A58",
+                        "label": {"en":"A58 (N58)"}
+                        },{
+                        "id": "A59",
+                        "label": {"en":"A59 (N59)"}
+                        },{
+                        "id": "A65",
+                        "label": {"en":"A65 (N65)"}
+                        },{
+                        "id": "A67",
+                        "label": {"en":"A67"}
+                        },{
+                        "id": "A73",
+                        "label": {"en":"A73"}
+                        },{
+                        "id": "A76",
+                        "label": {"en":"A76"}
+                        },{
+                        "id": "A77",
+                        "label": {"en":"A77"}
+                        },{
+                        "id": "A79",
+                        "label": {"en":"A79"}
+                        },{
+                        "id": "A200",
+                        "label": {"en":"A200 (N200)"}
+                        }
+                    ]
+                    }
+                   
+            ]            
+        }]
+    },
+    "permissions": [
+        "homey:manager:speech-output",
+        "homey:manager:speech-input"
+    ],
+    "speech":[
+        {
+            "id": "tell_traffic_info",
+            "importance": 1,
+            "triggers": {
+                "en": ["traffic","trafficjam"],
+                "nl": ["staat er file","staan er files"]
+            }
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "trafficjamentry":"Op de __roadname__ tussen __from__ en __to__ , __distance__ file. __delay__ vertraging",
+    "roadworkentry": "Op de __roadname__. __description__",
+    "policecheckentry": "Op de __roadname__. __description__",   
+    "noinformationfound":"Er is op dit moment geen informatie beschikbaar",
+    "notrafficjams": "Er zijn op dit moment geen files",
+    "noroadblocks":"Er zijn op dit moment geen werkzaamheden",
+    "nopolicechecks":"Er wordt op dit moment niet gecontroleerd.",
+    "less_then_minute":"Minder dan een minuut",
+    "unknown":"onbekende",
+    "minutes":"minuten"
+}
