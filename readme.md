@@ -15,6 +15,7 @@ none yet
 - Let Homey report a list of all traffic jams
 - Let homey report all trafic jamms on a specific road
 - Let homey report police checks, traffic jamms or road works on all or specific roads.
+
 ## Changelog
 
 1.0 ----
