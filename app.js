@@ -1,9 +1,11 @@
 "use strict";
-var https = require('http');
+var anwbApi = require('./anwbapi');
+var api = null;
 function init() {
 	Homey.log('Initialize ANWB Traffic application');
 
-
+	api = new anwbApi();
+	
 	//Homey React on speech inputs
 	Homey.log("Init speech inputs");
 	Homey.manager('speech-input').on('speech',function(speech,callback){
@@ -17,123 +19,83 @@ function init() {
 	// Homey react on actions from flows
 	Homey.log("Init flow actions and triggers");
 	Homey.manager('flow').on('action.anwb_tell_trafic_all',function(callback,args){
-		triggerReportAllTrafficInformation();
+		triggerReportAllTrafficInformation(callback);
 		callback(null,true);
 	})
 
 	Homey.manager('flow').on('action.anwb_tell_traffic_single',function(callback,args){
-		triggerReportSingleTrafficInformation(args['road']);
+		triggerReportSingleTrafficInformation(callback,args['road']);
 		callback(null,true);
 	})
 
 	Homey.manager('flow').on('action.anwb_tell_various',function(callback,args){
-		triggerVariousTrafficInformation(args['road'],args['eventType']);
+		triggerVariousTrafficInformation(callback,args['road'],args['eventType']);
+	});
+
+	Homey.manager('flow').on('action.anwb_check_traffic_size',function(callback,args){
+		
+		triggerReportSummary(callback,args['road']);
 	});
 
 	Homey.manager('flow').on('condition.anwb_check_traffic',function(callback,args){
 		
-		triggerCheckTrafficCondition(callback,args['road'],['trafficjam']);
+		triggerCheckTrafficCondition(callback,args['road']);
 	});
+
 
 
 	Homey.log('Done initialize ANWB Traffic application');
 }
 
-var triggerCheckTrafficCondition = function(callback, roadName, eventType){
-
-	var options = {};
-	options.host = 'www.anwb.nl';
-	options.path = '/feeds/gethf';
-	var returnValue = true;
-	https.get(options,function(res){
-		var body = '';
-		res.on('data',function(chunk){
-			body += chunk;	
-		}).on('end',function(){
-			var trafficInfo = JSON.parse(body).roadEntries;
-				trafficInfo = filterEventType(trafficInfo,eventType); // filter road entries based on event type
-				trafficInfo = filterRoadNames(trafficInfo,roadName); // filter road entries based on road name
-				callback(null,(trafficInfo.length > 0));
-				return;
-		});
-	}).on('error',function(error){
-		Homey.log('error retrieving schedule');
-		Homey.log(JSON.stringify(error));
-	});
+var triggerReportSummary = function(callback){
 	
-	//callback(null,true);
-}
-
-var triggerVariousTrafficInformation = function(roadName,eventtype){
-
-	if(roadName != ""){
-		roadName = [roadName];
-	}else{
-		roadName = [];
-	}
-	var options = {};
-		options.host = 'www.anwb.nl';
-		options.path = '/feeds/gethf';
-		
-		https.get(options,function(res){
-			var body = '';
-			res.on('data',function(chunk){
-				body += chunk;	
-			}).on('end',function(){
-				onreportTraficInformation(JSON.parse(body).roadEntries,[],roadName,[eventtype]);
-			});
-		}).on('error',function(error){
-			Homey.log('error retrieving schedule');
-			Homey.log(JSON.stringify(error));
-		});
-
-}
-
-var triggerReportSingleTrafficInformation = function(roadName){
-
-	var options = {};
-	options.host = 'www.anwb.nl';
-	options.path = '/feeds/gethf';
-	
-	https.get(options,function(res){
-		var body = '';
-		res.on('data',function(chunk){
-			body += chunk;	
-		}).on('end',function(){
-			onreportTraficInformation(JSON.parse(body).roadEntries,[],[roadName],['trafficjam']);
-		});
-	}).on('error',function(error){
-		Homey.log('error retrieving schedule');
-		Homey.log(JSON.stringify(error));
-	});
-
-}
-
-var triggerReportAllTrafficInformation = function(){
-	var options = {};
-	options.host = 'www.anwb.nl';
-	options.path = '/feeds/gethf';
-	
-	https.get(options,function(res){
-		var body = '';
-		res.on('data',function(chunk){
-			body += chunk;	
-		}).on('end',function(){
-			onreportTraficInformation(JSON.parse(body).roadEntries,[],[],['trafficjam']);
-		});
-	}).on('error',function(error){
-		Homey.log('error retrieving schedule');
-		Homey.log(JSON.stringify(error));
-		Homey.manager('speech-output').say('noinformationfound');
+	api.getSummary(function(data){
+		Homey.log(JSON.stringify(data));
+		reportSummary(data);
+		callback(null,true);
+	},
+	function(data){
+		Homey.log(JSON.stringify(data));
+		callback(null,false);
 	});
 }
 
-var onreportTraficInformation =  function(data, roadType,roadnames,eventType){
+var triggerCheckTrafficCondition = function(callback, roadName){
+	api.getTrafficInfo(function(data){
+		Homey.log(JSON.stringify(data));
+		callback(null,(data.length > 0));
+	},function(data){
+		onError(data);
+		callback(null,false);
+	},[],roadName,['trafficjam']);	
+}
+
+var triggerVariousTrafficInformation = function(callback,roadName,eventtype){
+	api.getTrafficInfo(function(data){
+		onreportTraficInformation(data,[eventtype])
+		callback(null,true);
+	},onError,[],roadName,[eventtype]);
+}
+
+var triggerReportSingleTrafficInformation = function(callback, roadName){
+	api.getTrafficInfo(function(data){
+		onreportTraficInformation(data,['trafficjam'])
+		callback(null,true);
+	},onError,[],[roadName],['trafficjam']);
+}
+
+var triggerReportAllTrafficInformation = function(callback){
+	api.getTrafficInfo(function(data){
+		onreportTraficInformation(data,['trafficjam']);
+		callback(null,true);
+	},function(data){
+		Homey.log('Fout tijdens ophalen data.');
+		callback(null,false);
+	},[],[],['trafficjam']);
+}
+
+var onreportTraficInformation =  function(trafficInfo,eventType){
 	
-	var trafficInfo = data;
-	trafficInfo = filterEventType(trafficInfo,eventType); // filter road entries based on event type
-	trafficInfo = filterRoadTypes(trafficInfo, roadType); // filter road entries based on road type
-	trafficInfo = filterRoadNames(trafficInfo, roadnames); // filter road entries based on road name
 	Homey.log(eventType);
 	var strLabelNoData = "noinformationfound";
 	switch(eventType[0]){
@@ -159,6 +121,32 @@ var onreportTraficInformation =  function(data, roadType,roadnames,eventType){
 		}
 	}
 	return true;
+	
+}
+
+var onError = function(data){
+	Homey.log(JSON.stringify(data));
+	Homey.manager('speech-output').say(_('onerror'));
+}
+
+var reportSummary = function(data){
+	var totals = data.totals.all;
+
+	var label = "summary_plural";
+	var options = {};
+	options.count = totals.count;
+	options.distance = formatDistance(totals.distance,false);
+
+	if(options.count == 1){
+		label = "summary_single";
+	}
+	if(options.count == 0){
+		label = "notrafficjams";
+	}
+
+	Homey.manager('speech-output').say(__(label,options));
+
+
 }
 
 var speakRoadEntry = function(entry,eventType){
@@ -215,17 +203,39 @@ var speakEventEntry = function(roadname,eventData,eventType){
 			label = "trafficjamentry";
 			options.from = eventData.from;
 			options.to = eventData.to;
-			options.distance = formatDistance(eventData.distance);
+			options.distance = formatDistance(eventData.distance,true);
 			options.delay = formatDelay(eventData.delay);
 			options.description = eventData.description;
 			
 		break;
 	}
+	if(options.hasOwnProperty('to')){
+		options.to = formatDescription(options.to);
+	}
+	if(options.hasOwnProperty('from')){
+		options.from = formatDescription(options.from);
+	}
+	if(options.hasOwnProperty('description')){
+		options.description = formatDescription(options.description);
+	}
+	
+
 	Homey.manager('speech-output').say(__(label,options));
 	Homey.manager('speech-output').say(__(options.description));
 	
 
 }
+
+var formatDescription = function(txt){
+	var placeholder = "knp";
+	var replacement = "knooppunt";
+	var currentLanguage = Homey.manager('i18n').getLanguage();
+	if(currentLanguage != "nl"){
+		replacement = "junction";
+	}
+	return txt.replace(/knp/g,replacement);
+}
+
 
 var formatDelay = function(delay){
 	if(delay == null || delay == undefined){
@@ -239,110 +249,26 @@ var formatDelay = function(delay){
 	return delay / 60 + Homey.manager('i18n').__('minutes'); 
 }
 
-var formatDistance = function(distance){
+var formatDistance = function(distance,meters){
 	if(distance != null && distance != undefined){
+	
 		if(Homey.manager('i18n').getUnits() == "metric"){
-			return Math.ceil(distance) / 1000 + " kilometer";
+			if(meters){
+				return Math.ceil(distance) / 1000 + " kilometer";
+			}else{
+				return distance + " kilometer";
+			}
+			
 		}else{
-			return Math.ceil(distance) / 1609 + " miles";
+			if(meters){
+				return Math.ceil(distance) / 1609 + " miles";
+			}else{
+				return Math.ceil(distance / 1,609)+ " miles";
+			}
+			
 		}
 	}
 	return "";
 }
-
-// filter on event type (trafficjam, roadworks, radar);
-
-var filterEventType = function(data,eventtype){
-	
-	var filtered = [];
-	if(eventtype != null && eventtype.length > 0){
-		for(var j = 0; j < eventtype.length;j++){
-			var eventType = eventtype[j];
-			for(var i = 0; i < data.length;i++){
-				var entry = data[i];
-				Homey.log('Even type'+entry)
-				switch(eventType){
-					case 'trafficjam':
-						if(entry.events.trafficJams.length > 0){
-							filtered.push(entry);
-						}
-						break;
-					case 'roadwork':
-						if(entry.events.roadWorks.length > 0){
-							filtered.push(entry);
-						}
-						break;
-					case 'radar':
-						if(entry.events.radars.length > 0){
-								filtered.push(entry);
-						}
-						break;
-				}
-			}
-		}
-	}else{
-		filtered = data;
-	}
-
-	Homey.log("Data length after event type filter");
-	Homey.log(filtered.length);
-
-	return filtered;	
-}
-
-// filter traffic road entries by roadtype
-var filterRoadTypes = function(data, roadTypes){
-	
-	var filtered = data;
-	if(roadTypes == null){
-		Homey.log('No road type filter set');
-	}
-
-	for(var i = 0;i < roadTypes.length;i++){
-		var rtype = roadTypes[i];
-		var newFiltered = [];
-		for(var j = 0; j < filtered.length;j++){
-			if(filtered[j].roadType == rtype){
-				newFiltered.push(filtered[j]);
-			}
-		}
-		filtered = newFiltered;
-	}
-
-	Homey.log("Data length after road type filter");
-	Homey.log(filtered.length);
-
-	return filtered;	
-}
-// filter traffic road entries by road name
-var filterRoadNames = function(data,names){
-	
-	var filtered = data;
-	if(names == null){
-		Homey.log('No road name filter set');
-	}
-
-	if( typeof names === 'string' ) {
-    	names = [ names ];
-	}
-
-
-	for(var i = 0;i < names.length;i++){
-		var name = names[i];
-		var newFiltered = [];
-		for(var j = 0; j < filtered.length;j++){
-			if(filtered[j].road == name){
-				newFiltered.push(filtered[j]);
-			}
-		}
-		filtered = newFiltered;
-	}
-
-	Homey.log("Data length after road name filter");
-	Homey.log(filtered.length);
-
-	return filtered;	
-}
-
 
 module.exports.init = init;
