@@ -1,20 +1,21 @@
 # Homey ANWB Traffic information
 
 This is an application to let Homey let you know which traffic jams , police checks or road works there currently are on
-the dutch roads.  
-
-## Release information
-current version: 0.0.1
+the dutch roads.
 
 ## speech support
 
 none yet
 
-## flow cards
+## flow cards (Then column)
 
 - Let Homey report a list of all traffic jams
 - Let homey report all trafic jamms on a specific road
 - Let homey report police checks, traffic jamms or road works on all or specific roads.
+
+## Triggers ( AND Column)
+
+- Let homey find out if there are traffic jams on a specific road. 
 
 ## Changelog
 
