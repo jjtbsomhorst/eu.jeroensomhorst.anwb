@@ -30,16 +30,42 @@ function init() {
 		triggerVariousTrafficInformation(args['road'],args['eventType']);
 	});
 
-	Homey.log(Homey.manager( 'i18n' ).getUnits());
+	Homey.manager('flow').on('condition.anwb_check_traffic',function(callback,args){
+		
+		triggerCheckTrafficCondition(callback,args['road'],['trafficjam']);
+	});
 
 
 	Homey.log('Done initialize ANWB Traffic application');
 }
 
+var triggerCheckTrafficCondition = function(callback, roadName, eventType){
+
+	var options = {};
+	options.host = 'www.anwb.nl';
+	options.path = '/feeds/gethf';
+	var returnValue = true;
+	https.get(options,function(res){
+		var body = '';
+		res.on('data',function(chunk){
+			body += chunk;	
+		}).on('end',function(){
+			var trafficInfo = JSON.parse(body).roadEntries;
+				trafficInfo = filterEventType(trafficInfo,eventType); // filter road entries based on event type
+				trafficInfo = filterRoadNames(trafficInfo,roadName); // filter road entries based on road name
+				callback(null,(trafficInfo.length > 0));
+				return;
+		});
+	}).on('error',function(error){
+		Homey.log('error retrieving schedule');
+		Homey.log(JSON.stringify(error));
+	});
+	
+	//callback(null,true);
+}
+
 var triggerVariousTrafficInformation = function(roadName,eventtype){
-	Homey.log('Trigger on any event type');
-	Homey.log('Road: '+roadName);
-	Homey.log('Event: '+eventtype);
+
 	if(roadName != ""){
 		roadName = [roadName];
 	}else{
@@ -227,10 +253,6 @@ var formatDistance = function(distance){
 // filter on event type (trafficjam, roadworks, radar);
 
 var filterEventType = function(data,eventtype){
-	Homey.log('Filter traffic info on event types');
-	try{
-		Homey.log(JSON.stringify(eventtype));
-	}catch(e){}
 	
 	var filtered = [];
 	if(eventtype != null && eventtype.length > 0){
@@ -238,6 +260,7 @@ var filterEventType = function(data,eventtype){
 			var eventType = eventtype[j];
 			for(var i = 0; i < data.length;i++){
 				var entry = data[i];
+				Homey.log('Even type'+entry)
 				switch(eventType){
 					case 'trafficjam':
 						if(entry.events.trafficJams.length > 0){
@@ -269,10 +292,6 @@ var filterEventType = function(data,eventtype){
 
 // filter traffic road entries by roadtype
 var filterRoadTypes = function(data, roadTypes){
-	Homey.log('Filter traffic info on road types');
-	try{
-		Homey.log(JSON.stringify(roadTypes));
-	}catch(e){};
 	
 	var filtered = data;
 	if(roadTypes == null){
@@ -297,15 +316,16 @@ var filterRoadTypes = function(data, roadTypes){
 }
 // filter traffic road entries by road name
 var filterRoadNames = function(data,names){
-	Homey.log('Filter traffic info on road types');
-	try{
-		Homey.log(JSON.stringify(names));
-	}catch(e){}
-
+	
 	var filtered = data;
 	if(names == null){
 		Homey.log('No road name filter set');
 	}
+
+	if( typeof names === 'string' ) {
+    	names = [ names ];
+	}
+
 
 	for(var i = 0;i < names.length;i++){
 		var name = names[i];
