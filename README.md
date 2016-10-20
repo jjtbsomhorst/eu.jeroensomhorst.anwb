@@ -19,6 +19,9 @@ none yet
 
 ## Changelog
 
+0.3.1
+* Changed images and icon
+
 0.3.0
 * Refactor of code. Api has been moved to separate file
 * Added summary card. Gives info about how many jams there are and the total distance
