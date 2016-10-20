@@ -19,6 +19,9 @@ none yet
 
 ## Changelog
 
+0.3.2
+* fixed a bug that would cause the app to crash when someone wanted to know road block information 
+
 0.3.1
 * Changed images and icon
 

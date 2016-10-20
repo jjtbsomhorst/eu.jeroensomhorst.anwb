@@ -197,7 +197,7 @@ var speakEventEntry = function(roadname,eventData,eventType){
 		break;
 		case 'radar':
 			label = "policecheckentry";
-			option.description = eventData.description;
+			options.description = eventData.description;
 		break;
 		case 'trafficjam':
 			label = "trafficjamentry";
