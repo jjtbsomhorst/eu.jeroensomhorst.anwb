@@ -9,11 +9,14 @@ function init() {
 	//Homey React on speech inputs
 	Homey.log("Init speech inputs");
 	Homey.manager('speech-input').on('speech',function(speech,callback){
-		switch(trigger.id){
-			case 'tell_traffic_info':
-				reportAllTrafficInformation();
-				return true;
-		}
+		speech.triggers.forEach(function(trigger){
+			switch(trigger.id){
+				case 'tell_traffic_info':
+					triggerReportAllTrafficInformation(callback);
+					return true;
+			}
+		});
+		
 	});
 
 	// Homey react on actions from flows

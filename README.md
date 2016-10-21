@@ -5,7 +5,9 @@ the dutch roads.
 
 ## speech support
 
-none yet
+- English: traffic,trafficjam. Dutch:   staat er file, staan er files?
+    Reports current traffic situation in the Netherlands
+    
 
 ## flow cards (Then column)
 
