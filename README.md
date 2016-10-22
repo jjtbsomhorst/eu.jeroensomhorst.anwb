@@ -21,6 +21,9 @@ the dutch roads.
 
 ## Changelog
 
+0.4.0
+* Bugfix release
+
 0.3.2
 * fixed a bug that would cause the app to crash when someone wanted to know road block information 
 
