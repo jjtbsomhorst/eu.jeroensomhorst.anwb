@@ -21,6 +21,9 @@ the dutch roads.
 
 ## Changelog
 
+0.4.1
+* Added trigger for traffic report on specified road.
+
 0.4.0
 * Bugfix release
 
@@ -39,3 +42,9 @@ the dutch roads.
 
 0.1.0 
 * Initial release
+
+## Donate
+
+If you like the app. Please consider a donation
+
+[![paypal](https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q67ZKATD9QVLY)

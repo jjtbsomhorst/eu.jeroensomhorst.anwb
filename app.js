@@ -149,7 +149,7 @@ var reportSummary = function(data){
 
 	Homey.manager('speech-output').say(__(label,options));
 
-
+	
 }
 
 var speakRoadEntry = function(entry,eventType){
