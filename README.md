@@ -21,8 +21,9 @@ the dutch roads.
 
 ## Changelog
 
-0.4.1
-* Added trigger for traffic report on specified road.
+0.4.2
+* Added condition to check if there are police checks on specified road
+* Added condition to check if there are road works on specified road
 
 0.4.0
 * Bugfix release

@@ -1,11 +1,14 @@
 "use strict";
-var anwbApi = require('./anwbapi');
-var api = null;
+const anwbApi = require('./anwbapi');
+const roadNames = [{ 	"id": "", 	"name": "" }, { 	"id": "A1", 	"name": "A1" }, { 	"id": "A2", 	"name": "A2" }, { 	"id": "A4", 	"name": "A4" }, { 	"id": "A5", 	"name": "A5" }, { 	"id": "A6", 	"name": "A6" }, { 	"id": "A7", 	"name": "A7" }, { 	"id": "A8", 	"name": "A8" }, { 	"id": "A9", 	"name": "A9" }, { 	"id": "A10", 	"name": "A10" }, { 	"id": "A12", 	"name": "A12" }, { 	"id": "A13", 	"name": "A13" }, { 	"id": "A15", 	"name": "A15" }, { 	"id": "A16", 	"name": "A16" }, { 	"id": "A17", 	"name": "A17" }, { 	"id": "A18", 	"name": "A18" }, { 	"id": "A20", 	"name": "A20" }, { 	"id": "A22", 	"name": "A22" }, { 	"id": "A27", 	"name": "A27" }, { 	"id": "A28", 	"name": "A28" }, { 	"id": "A29", 	"name": "A29" }, { 	"id": "A30", 	"name": "A30" }, { 	"id": "A31", 	"name": "A30 (N31)" }, { 	"id": "A32", 	"name": "A32" }, { 	"id": "A35", 	"name": "A35 (N35)" }, { 	"id": "A37", 	"name": "A37" }, { 	"id": "A38", 	"name": "A38" }, { 	"id": "A44", 	"name": "A44 (N44)" }, { 	"id": "A50", 	"name": "A50" }, { 	"id": "A58", 	"name": "A58 (N58)" }, { 	"id": "A59", 	"name": "A59 (N59)" }, { 	"id": "A65", 	"name": "A65 (N65)" }, { 	"id": "A67", 	"name": "A67" }, { 	"id": "A73", 	"name": "A73" }, { 	"id": "A76", 	"name": "A76" }, { 	"id": "A77", 	"name": "A77" }, { 	"id": "A79", 	"name": "A79" }, { 	"id": "A200", 	"name": "A200 (N200)" }];
+
+
+
+var api = new anwbApi();
+
 function init() {
 	Homey.log('Initialize ANWB Traffic application');
 
-	api = new anwbApi();
-	
 	//Homey React on speech inputs
 	Homey.log("Init speech inputs");
 	Homey.manager('speech-input').on('speech',function(speech,callback){
@@ -36,41 +39,82 @@ function init() {
 	});
 
 	Homey.manager('flow').on('action.anwb_check_traffic_size',function(callback,args){
-		
 		triggerReportSummary(callback,args['road']);
 	});
 
 	Homey.manager('flow').on('condition.anwb_check_traffic',function(callback,args){
-		
 		triggerCheckTrafficCondition(callback,args['road']);
 	});
 
+	Homey.manager('flow').on('condition.awnb_check_roadworks',function(callback,args){
+		triggerCheckRoadWorks(callback,args['road']);
+	});
 
+	Homey.manager('flow').on('condition.awnb_check_policechecks',function(callback,args){
+		triggerCheckRadarControles(callback,args['road']);
+	});
+
+	Homey.manager('flow').on('condition.awnb_check_roadworks.road.autocomplete',onRoadAutoComplete);
+	Homey.manager('flow').on('condition.awnb_check_policechecks.road.autocomplete',onRoadAutoComplete);
+	Homey.manager('flow').on('condition.anwb_check_traffic.road.autocomplete',onRoadAutoComplete);
 
 	Homey.log('Done initialize ANWB Traffic application');
 }
 
+
+var onRoadAutoComplete = function (callback,args){
+    var returnValue = [];
+    if(args.query != ""){
+		var queryUpper = args.query.toUpperCase();
+		roadNames.forEach(function(element) {
+			if(element.name.indexOf(queryUpper) == 0){
+				returnValue.push(element);
+			}
+		}, this);
+	}
+    callback(null,returnValue);
+}
+
+
 var triggerReportSummary = function(callback){
 	
 	api.getSummary(function(data){
-		Homey.log(JSON.stringify(data));
 		reportSummary(data);
 		callback(null,true);
 	},
 	function(data){
-		Homey.log(JSON.stringify(data));
-		callback(null,false);
+				callback(null,false);
 	});
 }
 
 var triggerCheckTrafficCondition = function(callback, roadName){
 	api.getTrafficInfo(function(data){
-		Homey.log(JSON.stringify(data));
+		Homey.log('Number of traffic jams: '+data.length);
 		callback(null,(data.length > 0));
 	},function(data){
 		onError(data);
 		callback(null,false);
-	},[],roadName,['trafficjam']);	
+	},[],roadName.id,['trafficjam']);	
+}
+
+var triggerCheckRoadWorks = function(callback,roadName){
+	api.getTrafficInfo(function(data){
+		Homey.log('Roadwork love: '+data.length);
+		callback(null,(data.length > 0));
+	},function(data){
+		onError(data);
+		callback(null,false);
+	},[],roadName.id,['roadwork']);	
+}
+
+var triggerCheckRadarControles = function(callback,roadName){
+	api.getTrafficInfo(function(data){
+		Homey.log('Radar love: '+data.length);
+		callback(null,(data.length > 0));
+	},function(data){
+		onError(data);
+		callback(null,false);
+	},[],roadName.id,['radar']);	
 }
 
 var triggerVariousTrafficInformation = function(callback,roadName,eventtype){
@@ -98,8 +142,6 @@ var triggerReportAllTrafficInformation = function(callback){
 }
 
 var onreportTraficInformation =  function(trafficInfo,eventType){
-	
-	Homey.log(eventType);
 	var strLabelNoData = "noinformationfound";
 	switch(eventType[0]){
 		case 'trafficjam':
@@ -128,8 +170,7 @@ var onreportTraficInformation =  function(trafficInfo,eventType){
 }
 
 var onError = function(data){
-	Homey.log(JSON.stringify(data));
-	Homey.manager('speech-output').say(_('onerror'));
+	Homey.manager('speech-output').say(__('onerror'));
 }
 
 var reportSummary = function(data){
@@ -172,8 +213,6 @@ var speakRoadEntry = function(entry,eventType){
 			}
 			break;
 	}
-	
-	Homey.log(entries.length);
 
 	if(entries.length < 0){
 		Homey.manager('speech-output').say(__('noinformationfound'));
@@ -187,9 +226,6 @@ var speakRoadEntry = function(entry,eventType){
 }
 
 var speakEventEntry = function(roadname,eventData,eventType){
-	Homey.log('Speak event entry');
-	Homey.log('Road name : '+roadname);
-	
 	var label = "";
 	var options = {};
 	options.roadname = roadname;
@@ -230,13 +266,12 @@ var speakEventEntry = function(roadname,eventData,eventType){
 }
 
 var formatDescription = function(txt){
-	var placeholder = "knp";
 	var replacement = "knooppunt";
 	var currentLanguage = Homey.manager('i18n').getLanguage();
 	if(currentLanguage != "nl"){
 		replacement = "junction";
 	}
-	return txt.replace(/knp/g,replacement);
+	return txt.replace(/knp./g,replacement);
 }
 
 

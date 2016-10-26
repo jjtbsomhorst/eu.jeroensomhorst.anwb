@@ -31,6 +31,10 @@ method.getSummary = function(success, error){
 
 
 method.getTrafficInfo = function(success,error,roadType, roadNames,eventType){
+	Homey.log('Check traffic info');
+	Homey.log('roadType: '+roadType);
+	Homey.log('roadNames: '+JSON.stringify(roadNames));
+	Homey.log('eventType: '+eventType);
     var self = this;
     var options = {};
     options.host = hostname;
