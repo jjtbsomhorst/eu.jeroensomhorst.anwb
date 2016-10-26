@@ -7,17 +7,20 @@ the dutch roads.
 
 - English: traffic,trafficjam. Dutch:   staat er file, staan er files?
     Reports current traffic situation in the Netherlands
-    
 
-## flow cards (Then column)
+## Condition cards (when column)
+
+## Action cards (Then column)
 
 - Let Homey report a list of all traffic jams
 - Let homey report all trafic jamms on a specific road
 - Let homey report police checks, traffic jamms or road works on all or specific roads.
 
-## Triggers ( AND Column)
+## Conditions ( AND Column)
 
-- Let homey find out if there are traffic jams on a specific road. 
+- Let homey find out if there are traffic jams on a specific road.
+- Let homey find out if there are any road works going on on a specific road.
+- Let homey find out if there are any police checks going on on a specific road. 
 
 ## Changelog
 
