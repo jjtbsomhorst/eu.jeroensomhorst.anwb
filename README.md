@@ -8,7 +8,7 @@ the dutch roads.
 - English: traffic,trafficjam. Dutch:   staat er file, staan er files?
     Reports current traffic situation in the Netherlands
 
-## Condition cards (when column)
+## Trigger cards (when column)
 
 ## Action cards (Then column)
 
