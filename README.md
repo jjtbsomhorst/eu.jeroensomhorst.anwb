@@ -24,6 +24,10 @@ the dutch roads.
 
 ## Changelog
 
+0.4.4
+* Fixed a grammar issue with radar checks condition
+* Fixed a bug that would cause the api to return empty results instead of the real results
+
 0.4.2
 * Added condition to check if there are police checks on specified road
 * Added condition to check if there are road works on specified road
