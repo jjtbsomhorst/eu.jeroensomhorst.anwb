@@ -46,8 +46,11 @@ method.getTrafficInfo = function(success,error,roadType, roadNames,eventType){
 		}).on('end',function(){
 			var traficInfo = JSON.parse(body).roadEntries;
             traficInfo = self.filterEventTypes(traficInfo,eventType);
+			Homey.log(traficInfo.length);
             traficInfo = self.filterRoadNames(traficInfo,roadNames);
+			Homey.log(traficInfo.length);
             traficInfo = self.filterRoadTypes(traficInfo,roadType);
+			Homey.log(traficInfo.length);
             success(traficInfo);
 		});
 	}).on('error',function(data){
@@ -91,24 +94,27 @@ method.filterEventTypes =function(data,eventtype){
 
 method.filterRoadTypes = function(data, roadTypes){
 	
-	var filtered = [];
+	var filtered= [];
 	if(roadTypes != null){
-		if( typeof roadTypes === 'string' ) {
-    		roadTypes = [ roadTypes ];
-		}
-
-		for(var i = 0;i < roadTypes.length;i++){
-			var rtype = roadTypes[i];
-			for(var j = 0; j < data.length;j++){
-				if(data[j].roadType == rtype){
-					filtered.push(data[j]);
+		if(typeof roadTypes === 'string'){
+			roadTypes = [roadTypes];
+		}	
+		if(roadTypes.length>0){
+			for(var i = 0;i < roadTypes.length;i++){
+				var roadType = roadTypes[i];
+				for(var j = 0; j < data.length;j++){
+					if(data[j].road == roadType){
+						filtered.push(data[j]);
+					}
 				}
 			}
+		}else{
+			filtered= data;
 		}
 	}else{
 		filtered = data;
 	}
-	return filtered;
+	return filtered;	
 
 		
 }
@@ -119,7 +125,7 @@ method.filterRoadNames = function(data,names){
 		if(typeof names === 'string'){
 			names = [names];
 		}	
-
+		if(names.length>0){
 		for(var i = 0;i < names.length;i++){
 			var name = names[i];
 			for(var j = 0; j < data.length;j++){
@@ -127,6 +133,9 @@ method.filterRoadNames = function(data,names){
 					filtered.push(data[j]);
 				}
 			}
+		}
+		}else{
+			filtered=data;
 		}
 	}else{
 		filtered = data;
