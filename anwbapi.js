@@ -91,45 +91,45 @@ method.filterEventTypes =function(data,eventtype){
 
 method.filterRoadTypes = function(data, roadTypes){
 	
-	var filtered = data;
-	if(roadTypes == null){
-		Homey.log('No road type filter set');
-	}
+	var filtered = [];
+	if(roadTypes != null){
+		if( typeof roadTypes === 'string' ) {
+    		roadTypes = [ roadTypes ];
+		}
 
-	for(var i = 0;i < roadTypes.length;i++){
-		var rtype = roadTypes[i];
-		var newFiltered = [];
-		for(var j = 0; j < filtered.length;j++){
-			if(filtered[j].roadType == rtype){
-				newFiltered.push(filtered[j]);
+		for(var i = 0;i < roadTypes.length;i++){
+			var rtype = roadTypes[i];
+			for(var j = 0; j < data.length;j++){
+				if(data[j].roadType == rtype){
+					filtered.push(data[j]);
+				}
 			}
 		}
-		filtered = newFiltered;
+	}else{
+		filtered = data;
 	}
+	return filtered;
 
-	return filtered;	
+		
 }
 method.filterRoadNames = function(data,names){
 	
-	var filtered = data;
-	if(names == null || names.length == 0) {
-		Homey.log('No road name filter set');
-	}
+	var filtered= [];
+	if(names != null){
+		if(typeof names === 'string'){
+			names = [names];
+		}	
 
-	if( typeof names === 'string' ) {
-    	names = [ names ];
-	}
-
-
-	for(var i = 0;i < names.length;i++){
-		var name = names[i];
-		var newFiltered = [];
-		for(var j = 0; j < filtered.length;j++){
-			if(filtered[j].road == name){
-				newFiltered.push(filtered[j]);
+		for(var i = 0;i < names.length;i++){
+			var name = names[i];
+			for(var j = 0; j < data.length;j++){
+				if(data[j].road == name){
+					filtered.push(data[j]);
+				}
 			}
 		}
-		filtered = newFiltered;
+	}else{
+		filtered = data;
 	}
 	return filtered;	
 }
