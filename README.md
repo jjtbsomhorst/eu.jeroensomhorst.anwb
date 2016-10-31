@@ -24,11 +24,6 @@ the dutch roads.
 
 ## Changelog
 
-0.4.5
-* Added trigger so you can now let Homey trigger when there is traffic on a specific road
-* Complete refactor of the code to make it easier to understand and add features to it 
-
-
 0.4.4
 * Fixed a grammar issue with radar checks condition
 * Fixed a bug that would cause the api to return empty results instead of the real results
