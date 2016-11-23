@@ -13,13 +13,13 @@
         "large":"./assets/images/large.jpg",
         "small":"./assets/images/small.jpg"
     },
-    "version": "0.4.5",
+    "version": "0.4.6",
     "compatibility": "0.x || 1.x",
     "author": {
             "name": "Jeroen Somhorst",
             "email": "j.somhorst@gmail.com"
     },
-    "category": ["internet"], 
+    "category": ["location"], 
     "dependencies":{
         "request":"*"
     },

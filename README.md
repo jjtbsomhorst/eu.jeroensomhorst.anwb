@@ -24,6 +24,10 @@ the dutch roads.
 
 ## Changelog
 
+0.4.6
+
+* Changed the category from Internet to Location
+
 0.4.5
 * Added more N roads
 * Added more A roads
