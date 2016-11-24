@@ -24,6 +24,9 @@ the dutch roads.
 
 ## Changelog
 
+0.4.4.1
+* Localization category added
+
 0.4.4
 * Fixed a grammar issue with radar checks condition
 * Fixed a bug that would cause the api to return empty results instead of the real results
