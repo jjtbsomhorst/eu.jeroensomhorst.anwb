@@ -24,7 +24,7 @@ the dutch roads.
 
 ## Changelog
 
-0.4.4.1
+0.4.5
 * Localization category added
 
 0.4.4
