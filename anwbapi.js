@@ -1,5 +1,5 @@
 "use strict"
-var https = require('http');
+var https = require('https');
 const hostname = "www.anwb.nl";
 const endpoint_summary = "/feeds/gethfsummary";
 const endpoint_trafficinfo = "/feeds/gethf";
@@ -11,8 +11,6 @@ function AnwbApi(){
 };
 
 method.getSummary = function(success, error){
-    Homey.log('get summary information');
-
     var options = {};
     options.host = hostname;
     options.path = endpoint_summary;
@@ -31,10 +29,6 @@ method.getSummary = function(success, error){
 
 
 method.getTrafficInfo = function(success,error,roadType, roadNames,eventType){
-	Homey.log('Check traffic info');
-	Homey.log('roadType: '+roadType);
-	Homey.log('roadNames: '+JSON.stringify(roadNames));
-	Homey.log('eventType: '+eventType);
     var self = this;
     var options = {};
     options.host = hostname;
@@ -46,11 +40,11 @@ method.getTrafficInfo = function(success,error,roadType, roadNames,eventType){
 		}).on('end',function(){
 			var traficInfo = JSON.parse(body).roadEntries;
             traficInfo = self.filterEventTypes(traficInfo,eventType);
-			Homey.log(traficInfo.length);
+			
             traficInfo = self.filterRoadNames(traficInfo,roadNames);
-			Homey.log(traficInfo.length);
+			
             traficInfo = self.filterRoadTypes(traficInfo,roadType);
-			Homey.log(traficInfo.length);
+			
             success(traficInfo);
 		});
 	}).on('error',function(data){
