@@ -35,6 +35,7 @@ the dutch roads.
 * Added more N roads
 * Added more A roads
 * Changed all the Dropdown lists on various cards to choose roads too autocomplete fields.
+* Localization category added
 
 0.4.4
 * Fixed a grammar issue with radar checks condition
