@@ -24,7 +24,17 @@ the dutch roads.
 
 ## Changelog
 
+0.4.7
+* Fixed the api. ANWB moved from http to https
+
+0.4.6
+
+* Changed the category from Internet to Location
+
 0.4.5
+* Added more N roads
+* Added more A roads
+* Changed all the Dropdown lists on various cards to choose roads too autocomplete fields.
 * Localization category added
 
 0.4.4
