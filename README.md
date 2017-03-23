@@ -24,6 +24,9 @@ the dutch roads.
 
 ## Changelog
 
+0.4.7
+* Fixed the api. ANWB moved from http to https
+
 0.4.6
 
 * Changed the category from Internet to Location

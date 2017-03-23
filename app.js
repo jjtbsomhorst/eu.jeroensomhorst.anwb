@@ -165,8 +165,8 @@ var onreportTraficInformation =  function(trafficInfo,eventType){
 	}
 
 	if(trafficInfo.length == 0){
-		//Homey.manager('speech-output').say(__(strLabelNoData));
-		Homey.log(__(strLabelNoData));
+		Homey.manager('speech-output').say(__(strLabelNoData));
+		//Homey.log(__(strLabelNoData));
 		return true;
 	}
 
@@ -180,8 +180,8 @@ var onreportTraficInformation =  function(trafficInfo,eventType){
 }
 
 var onError = function(data){
-	//Homey.manager('speech-output').say(__('onerror'));
-	Homey.log(__('onerror'));
+	Homey.manager('speech-output').say(__('onerror'));
+	//Homey.log(__('onerror'));
 }
 
 var reportSummary = function(data){
@@ -199,8 +199,8 @@ var reportSummary = function(data){
 		label = "notrafficjams";
 	}
 
-	//Homey.manager('speech-output').say(__(label,options));
-	Homey.log(__(label,options));
+	Homey.manager('speech-output').say(__(label,options));
+	//Homey.log(__(label,options));
 	
 }
 
@@ -226,8 +226,8 @@ var speakRoadEntry = function(entry,eventType){
 	}
 
 	if(entries.length < 0){
-		//Homey.manager('speech-output').say(__('noinformationfound'));
-		Homey.log(__('noinformationfound'));
+		Homey.manager('speech-output').say(__('noinformationfound'));
+		//Homey.log(__('noinformationfound'));
 		return;
 	}
 
@@ -270,10 +270,10 @@ var speakEventEntry = function(roadname,eventData,eventType){
 		options.description = formatDescription(options.description);
 	}
 	
-	//Homey.manager('speech-output').say(__(label,options));
-	//Homey.manager('speech-output').say(__(options.description));
-	Homey.log(__(label,options));
-	Homey.log(__(options.description));
+	Homey.manager('speech-output').say(__(label,options));
+	Homey.manager('speech-output').say(__(options.description));
+	//Homey.log(__(label,options));
+	//Homey.log(__(options.description));
 
 }
 
