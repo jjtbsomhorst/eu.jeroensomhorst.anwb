@@ -5,7 +5,7 @@ var nRoads = [{"id":"N34","name":"N34"},{"id":"N46","name":"N46"},{"id":"N351","
 
 
 var api = new anwbApi();
-
+var debug = true;
 function init() {
 	Homey.log('Initialize ANWB Traffic application');
 
@@ -130,14 +130,14 @@ var triggerVariousTrafficInformation = function(callback,roadName,eventtype){
 	api.getTrafficInfo(function(data){
 		onreportTraficInformation(data,[eventtype])
 		callback(null,true);
-	},onError,[],roadName,[eventtype]);
+	},onError,[],roadName.id,[eventtype]);
 }
 
 var triggerReportSingleTrafficInformation = function(callback, roadName){
 	api.getTrafficInfo(function(data){
 		onreportTraficInformation(data,['trafficjam'])
 		callback(null,true);
-	},onError,[],[roadName],['trafficjam']);
+	},onError,[],roadName.id,['trafficjam']);
 }
 
 var triggerReportAllTrafficInformation = function(callback){
@@ -165,8 +165,11 @@ var onreportTraficInformation =  function(trafficInfo,eventType){
 	}
 
 	if(trafficInfo.length == 0){
-		Homey.manager('speech-output').say(__(strLabelNoData));
-		//Homey.log(__(strLabelNoData));
+		if(!debug){
+			Homey.manager('speech-output').say(__(strLabelNoData));
+		}else{
+			Homey.log(__(strLabelNoData));
+		}
 		return true;
 	}
 
@@ -180,8 +183,12 @@ var onreportTraficInformation =  function(trafficInfo,eventType){
 }
 
 var onError = function(data){
-	Homey.manager('speech-output').say(__('onerror'));
-	//Homey.log(__('onerror'));
+	
+	if(!debug){
+		Homey.manager('speech-output').say(__('onerror'));
+	}else{
+		Homey.log(__('onerror'));
+	}
 }
 
 var reportSummary = function(data){
@@ -198,9 +205,11 @@ var reportSummary = function(data){
 	if(options.count == 0){
 		label = "notrafficjams";
 	}
-
-	Homey.manager('speech-output').say(__(label,options));
-	//Homey.log(__(label,options));
+	if(!debug){
+		Homey.manager('speech-output').say(__(label,options));
+	}else{
+		Homey.log(__(label,options));
+	}
 	
 }
 
@@ -226,8 +235,11 @@ var speakRoadEntry = function(entry,eventType){
 	}
 
 	if(entries.length < 0){
-		Homey.manager('speech-output').say(__('noinformationfound'));
-		//Homey.log(__('noinformationfound'));
+		if(!debug){
+			Homey.manager('speech-output').say(__('noinformationfound'));
+		}else{
+			Homey.log(__('noinformationfound'));
+		}
 		return;
 	}
 
@@ -269,12 +281,13 @@ var speakEventEntry = function(roadname,eventData,eventType){
 	if(options.hasOwnProperty('description')){
 		options.description = formatDescription(options.description);
 	}
-	
-	Homey.manager('speech-output').say(__(label,options));
-	Homey.manager('speech-output').say(__(options.description));
-	//Homey.log(__(label,options));
-	//Homey.log(__(options.description));
-
+	if(!debug){
+		Homey.manager('speech-output').say(__(label,options));
+		Homey.manager('speech-output').say(__(options.description));
+	}else{
+		Homey.log(__(label,options));
+		Homey.log(__(options.description));
+	}
 }
 
 var formatDescription = function(txt){
