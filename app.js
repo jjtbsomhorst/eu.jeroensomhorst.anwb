@@ -5,7 +5,7 @@ var nRoads = [{"id":"N34","name":"N34"},{"id":"N46","name":"N46"},{"id":"N351","
 
 
 var api = new anwbApi();
-var debug = true;
+var debug = false;
 function init() {
 	Homey.log('Initialize ANWB Traffic application');
 
