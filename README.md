@@ -24,6 +24,9 @@ the dutch roads.
 
 ## Changelog
 
+0.4.8
+* Fixed an issue that would cause homey to tell all traffic information instead of only from a single road.
+
 0.4.7
 * Fixed the api. ANWB moved from http to https
 
