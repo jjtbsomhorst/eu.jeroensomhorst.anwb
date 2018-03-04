@@ -58,6 +58,12 @@
             "args": [{
                         "name": "road",
                         "type": "autocomplete"
+                    },{
+                        "name": "start",
+                        "type": "text"
+                    },{
+                        "name": "end",
+                        "type": "text"
                     }
             ]        
         }],
