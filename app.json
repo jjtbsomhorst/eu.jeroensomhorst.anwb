@@ -59,11 +59,19 @@
                         "name": "road",
                         "type": "autocomplete"
                     },{
-                        "name": "start",
-                        "type": "text"
+                        "name": "segment_start",
+                        "type": "text",
+                        "title": {
+                            "en": "Start",
+                            "nl": "Start"
+                        }
                     },{
-                        "name": "end",
-                        "type": "text"
+                        "name": "segment_end",
+                        "type": "text",
+                        "title": {
+                            "en": "End",
+                            "nl": "End"
+                        }
                     }
             ]        
         }],

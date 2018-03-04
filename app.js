@@ -43,7 +43,7 @@ function init() {
 	});
 
 	Homey.manager('flow').on('condition.anwb_check_traffic',function(callback,args){
-		triggerCheckTrafficCondition(callback,args['road']);
+		triggerCheckTrafficCondition(callback,args['road'],args['segment_start'],args['segment_end']);
 	});
 
 	Homey.manager('flow').on('condition.awnb_check_roadworks',function(callback,args){
@@ -96,7 +96,7 @@ var triggerReportSummary = function(callback){
 	});
 }
 
-var triggerCheckTrafficCondition = function(callback, roadName){
+var triggerCheckTrafficCondition = function(callback, roadName,segment_start,segment_end){
 	api.getTrafficInfo(function(data){
 		Homey.log('Number of traffic jams: '+data.length);
 		callback(null,(data.length > 0));

@@ -11,5 +11,7 @@
     "minutes":"minuten",
     "onerror": "Er is een fout opgetreden tijdens het ophalen van de data.",
     "summary_plural": "Op dit moment staan er __count__ files met een totale lengte van __distance__",
-    "summary_single": "Op dit moment staat er __count__ file met een totale lengte van __distance__"
+    "summary_single": "Op dit moment staat er __count__ file met een totale lengte van __distance__",
+    "segment_start": "Vanaf",
+    "segment_end": "Naar"
 }
