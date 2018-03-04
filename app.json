@@ -14,7 +14,7 @@
         "small":"./assets/images/small.jpg"
     },
 
-    "version": "0.4.8",
+    "version": "0.4.9",
 
     "compatibility": "0.x || 1.x",
     "author": {
