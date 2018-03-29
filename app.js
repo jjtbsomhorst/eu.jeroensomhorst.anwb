@@ -6,6 +6,7 @@ var nRoads = [{"id":"N34","name":"N34"},{"id":"N46","name":"N46"},{"id":"N351","
 
 var api = new anwbApi();
 var debug = false;
+var tokens = [];
 function init() {
 	Homey.log('Initialize ANWB Traffic application');
 
@@ -21,6 +22,9 @@ function init() {
 		});
 		
 	});
+
+	Homey.log("Init tokens");
+	registerToken('ANWB_summary', 'string', '', function(err, token) { tokens['summary'] = token; });
 
 	// Homey react on actions from flows
 	Homey.log("Init flow actions and triggers");
@@ -40,6 +44,10 @@ function init() {
 
 	Homey.manager('flow').on('action.anwb_check_traffic_size',function(callback,args){
 		triggerReportSummary(callback,args['road']);
+	});
+
+	Homey.manager('flow').on('action.anwb_update_tokens',function(callback,args){
+		updateToken(callback);
 	});
 
 	Homey.manager('flow').on('condition.anwb_check_traffic',function(callback,args){
@@ -93,6 +101,35 @@ var triggerReportSummary = function(callback){
 	},
 	function(data){
 				callback(null,false);
+	});
+}
+
+var updateToken = function(callback){
+	Homey.log("Updating summary in token");
+	api.getSummary(function(data){
+	var totals = data.totals.all;
+
+	var label = "summary_plural";
+	var options = {};
+	options.count = totals.count;
+	options.distance = formatDistance(totals.distance,false);
+
+	if(options.count == 1){
+		label = "summary_single";
+	}
+	if(options.count > 1){
+		label = "summary_plural";
+	}
+	if(options.count == 0){
+		label = "notrafficjams";
+	}
+
+	var answerString = __(label, { "count": options.count, "distance": options.distance});
+		tokens['summary'].setValue(answerString, function(err) { if (err) console.error('setValue error:', err); });
+		callback(null,true);
+	},
+	function(data){
+		callback(null,false);
 	});
 }
 
@@ -332,6 +369,21 @@ var formatDistance = function(distance,meters){
 		}
 	}
 	return "";
+}
+
+function registerToken(id, type, value, callback) {
+	Homey.manager('flow').registerToken(id, {
+	    type: type,
+	    title: __(id)
+	}, function(err, token){
+	    if(err) return console.error('registerToken error:', err);
+
+	    token.setValue(value, function(err) {
+	        if(err) return console.error('setValue error:', err);
+	    });
+	    
+	    callback(null, token);
+	});
 }
 
 module.exports.init = init;

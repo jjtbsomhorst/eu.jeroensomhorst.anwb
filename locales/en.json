@@ -10,6 +10,6 @@
     "unknown":"unknown",
     "minutes":"minutes",
     "onerror": "An error occured while retrieving data",
-    "summary_plural": "Currently there are __count__ files with total length of __distance__",
+    "summary_plural": "Currently there are __count__ trafficjams with total length of __distance__",
     "summary_single": "Currently there is __count__ file with total length of __distance__"
 }
