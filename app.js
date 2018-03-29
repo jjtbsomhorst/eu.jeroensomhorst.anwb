@@ -129,7 +129,7 @@ var updateToken = function(callback){
 		callback(null,true);
 	},
 	function(data){
-				callback(null,false);
+		callback(null,false);
 	});
 }
 
