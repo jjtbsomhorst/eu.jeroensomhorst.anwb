@@ -70,6 +70,13 @@
                 }
             },
             {
+                "id":"anwb_update_tokens",
+                "title": {
+                    "en":"Update trafficjam information (for tag)",
+                    "nl":"Update file informatie (voor tag)"
+                }
+            },
+            {
                 "id": "anwb_tell_various",
                 "title":{
                     "en": "Traffic information",
