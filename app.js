@@ -24,7 +24,7 @@ function init() {
 	});
 
 	Homey.log("Init tokens");
-	registerToken('summary', 'string', '', function(err, token) { tokens['summary'] = token; });
+	registerToken('ANWB_summary', 'string', '', function(err, token) { tokens['summary'] = token; });
 
 	// Homey react on actions from flows
 	Homey.log("Init flow actions and triggers");
@@ -374,7 +374,7 @@ var formatDistance = function(distance,meters){
 function registerToken(id, type, value, callback) {
 	Homey.manager('flow').registerToken(id, {
 	    type: type,
-	    title: __('tokens.'+id)
+	    title: __(id)
 	}, function(err, token){
 	    if(err) return console.error('registerToken error:', err);
 
